@@ -14,6 +14,7 @@ pillow_heif.register_heif_opener()
 @pytest.mark.skipif(not helpers.aom(), reason="Requires AVIF support.")
 @pytest.mark.skipif(not helpers.hevc_enc(), reason="Requires HEVC encoder.")
 @pytest.mark.parametrize("save_format", ("HEIF", "AVIF"))
+@pytest.mark.skipif(lambda save_format: save_format == "AVIF", reason="AVIF metadata not supported")
 @pytest.mark.parametrize(
     "im_format",
     (
