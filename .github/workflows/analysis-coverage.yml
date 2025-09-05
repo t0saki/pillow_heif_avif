@@ -77,13 +77,8 @@ jobs:
           path: ./htmlcov
           if-no-files-found: error
 
-      - name: Upload report to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.xml
-          fail_ci_if_error: true
-          verbose: true
+      - name: Skip Codecov upload - token not available
+        run: echo "Skipping Codecov upload - tokens disabled in fork"
 
   coverage-linux-pillow-dev:
     runs-on: ubuntu-22.04
@@ -124,13 +119,8 @@ jobs:
           path: ./htmlcov
           if-no-files-found: error
 
-      - name: Upload report to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.xml
-          fail_ci_if_error: true
-          verbose: true
+      - name: Skip Codecov upload - token not available
+        run: echo "Skipping Codecov upload - tokens disabled in fork"
 
   coverage-macos:
     runs-on: macos-13
@@ -163,13 +153,8 @@ jobs:
           path: ./htmlcov
           if-no-files-found: error
 
-      - name: Upload report to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.xml
-          fail_ci_if_error: true
-          verbose: true
+      - name: Skip Codecov upload - token not available
+        run: echo "Skipping Codecov upload - tokens disabled in fork"
 
   coverage-macos-arm:
     runs-on: macos-14
@@ -200,13 +185,8 @@ jobs:
           path: ./htmlcov
           if-no-files-found: error
 
-      - name: Upload report to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.xml
-          fail_ci_if_error: true
-          verbose: true
+      - name: Skip Codecov upload - token not available
+        run: echo "Skipping Codecov upload - tokens disabled in fork"
 
   coverage-windows:
     runs-on: windows-2022
@@ -284,13 +264,8 @@ jobs:
           path: ./htmlcov
           if-no-files-found: error
 
-      - name: Upload report to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.xml
-          fail_ci_if_error: true
-          verbose: true
+      - name: Skip Codecov upload - token not available
+        run: echo "Skipping Codecov upload - tokens disabled in fork"
 
   coverage-pi-heif:
     runs-on: ubuntu-22.04
@@ -330,13 +305,8 @@ jobs:
           path: ./htmlcov
           if-no-files-found: error
 
-      - name: Upload report to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.xml
-          fail_ci_if_error: true
-          verbose: true
+      - name: Skip Codecov upload - token not available
+        run: echo "Skipping Codecov upload - tokens disabled in fork"
 
   test-pi-heif:
     runs-on: ubuntu-22.04
@@ -399,10 +369,5 @@ jobs:
           path: ./htmlcov
           if-no-files-found: error
 
-      - name: Upload report to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.xml
-          fail_ci_if_error: true
-          verbose: true
+      - name: Skip Codecov upload - token not available
+        run: echo "Skipping Codecov upload - tokens disabled in fork"
