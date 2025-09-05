@@ -8,6 +8,7 @@ on:
       - 'setup.*'
       - 'libheif/linux_*.py'
       - 'pyproject.toml'
+  workflow_dispatch:
 
 jobs:
   wheels_macos_arm:
@@ -101,6 +102,64 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: wheels_pillow_heif-windows-x86_64
+          path: wheelhouse/*.whl
+          if-no-files-found: error
+
+  wheels_windows_arm64:
+    name: windows • ARM64
+    runs-on: windows-2022
+    env:
+      MSYS2_PREFIX: "C:/temp/msys64/mingw64"
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: msys2/setup-msys2@v2
+        with:
+          location: C:/temp
+          update: true
+          install: >-
+            patch
+            mingw-w64-x86_64-binutils
+
+      - name: Build libheif and dependencies
+        shell: msys2 {0}
+        run: |
+            cd libheif/windows/mingw-w64-libheif
+            makepkg-mingw --syncdeps --noconfirm -f
+            pacman -U mingw-w64-x86_64-libheif-*-any.pkg.tar.zst --noconfirm
+
+      - name: Remove DLL trailing data
+        run: |
+          Get-ChildItem -Path $Env:MSYS2_PREFIX/bin -Force | Format-List
+          ${{ env.MSYS2_PREFIX }}/bin/strip -s -v ${{ env.MSYS2_PREFIX }}/bin/libheif.dll
+          ${{ env.MSYS2_PREFIX }}/bin/strip -s -v ${{ env.MSYS2_PREFIX }}/bin/libde265-0.dll
+          ${{ env.MSYS2_PREFIX }}/bin/strip -s -v ${{ env.MSYS2_PREFIX }}/bin/libx265-215.dll
+          ${{ env.MSYS2_PREFIX }}/bin/strip -s -v ${{ env.MSYS2_PREFIX }}/bin/libaom.dll
+          ${{ env.MSYS2_PREFIX }}/bin/strip -s -v ${{ env.MSYS2_PREFIX }}/bin/libwinpthread-1.dll
+          ${{ env.MSYS2_PREFIX }}/bin/strip -s -v ${{ env.MSYS2_PREFIX }}/bin/libgcc_s_seh-1.dll
+          ${{ env.MSYS2_PREFIX }}/bin/strip -s -v ${{ env.MSYS2_PREFIX }}/bin/libstdc++-6.dll
+
+      - name: Run cibuildwheel
+        run: |
+          python3 -m pip install cibuildwheel==3.1.3
+          python3 -m cibuildwheel
+        env:
+          CIBW_ARCHS: "ARM64"
+          CIBW_ENVIRONMENT_WINDOWS: PH_FULL_ACTION=1
+          CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: "delvewheel repair -vv -w {dest_dir} {wheel} --add-path ${{ env.MSYS2_PREFIX }}/bin"
+
+      - name: Check built wheels
+        run: |
+          python3 -m pip install twine
+          python3 -m twine check wheelhouse/*
+
+      - name: Upload built wheels
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels_pillow_heif-windows-arm64
           path: wheelhouse/*.whl
           if-no-files-found: error
 
