@@ -7,6 +7,7 @@ RUN \
     alpine-sdk \
     cmake \
     nasm \
+    aom-dev \
     x265-dev \
     libde265-dev \
     py3-numpy \

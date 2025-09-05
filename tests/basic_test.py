@@ -1,5 +1,4 @@
 import builtins
-import contextlib
 import os
 from pathlib import Path
 
@@ -22,6 +21,12 @@ def test_libheif_info():
     assert any(version.startswith(prefix) for prefix in valid_prefixes)
 
 
+@pytest.mark.skipif(helpers.aom(), reason="Only when AVIF support missing.")
+def test_pillow_register_avif_plugin():
+    with pytest.warns(UserWarning):
+        pillow_heif.register_avif_opener()
+
+
 @pytest.mark.parametrize("img_path", dataset.FULL_DATASET)
 def test_get_file_mimetype(img_path):
     mimetype = pillow_heif.get_file_mimetype(img_path)
@@ -29,6 +34,7 @@ def test_get_file_mimetype(img_path):
         "image/heic",
         "image/heif",
         "image/heif-sequence",
+        "image/avif",
     )
     assert mimetype == pillow_heif.open_heif(img_path, False).mimetype
 
@@ -103,7 +109,7 @@ def test_heif_str():
 @pytest.mark.skipif(not helpers.RELEASE_FULL_FLAG, reason="Only when building full release")
 def test_full_build():
     info = pillow_heif.libheif_info()
-    assert not info["AVIF"]
+    assert info["AVIF"]
     assert info["HEIF"]
     assert info["encoders"]
     assert info["decoders"]

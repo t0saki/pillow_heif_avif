@@ -16,7 +16,8 @@ RUN \
     nasm \
     wget \
     libde265-dev \
-    libx265-dev
+    libx265-dev \
+    libaom-dev
 
 FROM base as build_test
 

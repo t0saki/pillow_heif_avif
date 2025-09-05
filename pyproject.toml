@@ -143,6 +143,7 @@ basic.good-names = [
   "fp",
   "im",
   "HeifImagePlugin",
+  "AvifImagePlugin",
 ]
 reports.output-format = "colorized"
 similarities.ignore-imports = "yes"
